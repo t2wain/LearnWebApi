@@ -14,8 +14,8 @@ namespace ApiTest
         public DbFixture()
         {
             this.DbContext = new AdventureWorksContext();
-            this.Repo = new Repository(this.DbContext);
             this.Mapper = MapperProfile.GetMapper();
+            this.Repo = new Repository(this.DbContext, this.Mapper);
             this.ProductRepo = new GenericRepository<Product>(this.DbContext);
         }
 

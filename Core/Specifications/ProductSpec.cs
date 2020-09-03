@@ -14,7 +14,7 @@ namespace Core.Specifications
             var s = productParams;
 
             Criteria = (p => 
-                (!s.ProductCateogryId.HasValue || p.ProductCategoryId == s.ProductCateogryId)
+                (!s.ProductCategoryId.HasValue || p.ProductCategoryId == s.ProductCategoryId)
                 && (!s.ProductModelId.HasValue || p.ProductModelId == s.ProductModelId)
             );
 

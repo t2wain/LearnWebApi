@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using AutoMapper;
+using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,12 +33,26 @@ namespace Infrastructure.Data
 
         public async Task<int> GetCountAsync(ISpecification<T> spec)
         {
-            return await ApplySpecficiation(spec).CountAsync();
+            return await ApplySpecficiation(spec, true).CountAsync();
         }
 
-        protected IQueryable<T> ApplySpecficiation(ISpecification<T> spec)
+        public async Task<Pagination<D>> GetPagination<D>(ISpecification<T> spec, IMapper mapper) where D : class
         {
-            return SpecificationEvaluator<T>.GetQuery(this._context, spec);
+            var count = await GetCountAsync(spec);
+            var lst = await GetListAsync(spec);
+            var lstDto = mapper.Map<IReadOnlyList<D>>(lst);
+            return new Pagination<D>
+            {
+                PageIndex = spec.Skip / spec.Take + 1,
+                PageSize = spec.Take,
+                Count = count,
+                Data = lstDto
+            };
+        }
+
+        protected IQueryable<T> ApplySpecficiation(ISpecification<T> spec, bool isGetCount = false)
+        {
+            return SpecificationEvaluator<T>.GetQuery(this._context, spec, isGetCount);
         }
 
     }

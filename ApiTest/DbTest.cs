@@ -106,18 +106,5 @@ namespace ApiTest
                 .ToListAsync();
             Assert.NotEmpty(lst);
         }
-
-
-        [Fact]
-        public async void Should_Return_Product_Count_With_Spec()
-        {
-            var s = new ProductSpec(new ProductSpecParams());
-            s.IsCountEnabled = true;
-            var q = SpecificationEvaluator<Product>.GetQuery(this._df.DbContext, s);
-            var cnt = await q.CountAsync();
-            Assert.True(cnt == 295);
-        }
-
-
     }
 }

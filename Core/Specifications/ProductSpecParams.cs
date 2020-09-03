@@ -15,7 +15,7 @@ namespace Core.Specifications
             set => _pageSize = Math.Min(value, MaxPageSize);
         }
         public string Sort { get; set; }
-        public int? ProductCateogryId { get; set; }
+        public int? ProductCategoryId { get; set; }
         public int? ProductModelId { get; set; }
     }
 }

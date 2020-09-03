@@ -1,4 +1,5 @@
-﻿using Core.Specifications;
+﻿using AutoMapper;
+using Core.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,5 +12,6 @@ namespace Core.Interfaces
         Task<T> GetById(ISpecification<T> spec);
         Task<IReadOnlyList<T>> GetListAsync(ISpecification<T> spec);
         Task<int> GetCountAsync(ISpecification<T> spec);
+        Task<Pagination<D>> GetPagination<D>(ISpecification<T> spec, IMapper mapper) where D : class;
     }
 }

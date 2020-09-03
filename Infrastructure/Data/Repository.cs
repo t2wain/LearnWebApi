@@ -8,17 +8,21 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Core.Specifications;
 using Microsoft.EntityFrameworkCore.Query;
+using AutoMapper;
+using Core.Dtos;
 
 namespace Infrastructure.Data
 {
     public class Repository : IRepository
     {
         private readonly AdventureWorksContext _context;
+        private readonly IMapper _mapper;
         private readonly IGenericRepository<Product> _prodRepo;
 
-        public Repository(AdventureWorksContext context)
+        public Repository(AdventureWorksContext context, IMapper mapper)
         {
             this._context = context;
+            this._mapper = mapper;
             this._prodRepo = new GenericRepository<Product>(this._context);
         }
 
@@ -53,8 +57,13 @@ namespace Infrastructure.Data
         public async Task<int> GetProductsCountAsync(ProductSpecParams productParams)
         {
             var spec = new ProductSpec(productParams);
-            spec.IsCountEnabled = true;
             return await this._prodRepo.GetCountAsync(spec);
+        }
+
+        public async Task<Pagination<ProductDto>> GetProductsDtoAsync(ProductSpecParams productParams)
+        {
+            var spec = new ProductSpec(productParams);
+            return await this._prodRepo.GetPagination<ProductDto>(spec, this._mapper);
         }
 
         #endregion

@@ -1,23 +1,20 @@
 ﻿using Core.Specifications;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Infrastructure.Data
 {
     public class SpecificationEvaluator<TEntity> where TEntity: class
     {
         public static IQueryable<TEntity> GetQuery(IQueryable<TEntity> inputQuery, 
-            ISpecification<TEntity> spec)
+            ISpecification<TEntity> spec, bool isGetCount = false)
         {
             var q = inputQuery;
 
             if (spec.Criteria != null)
                 q = q.Where(spec.Criteria);
 
-            if (!spec.IsCountEnabled)
+            if (!isGetCount)
             {
                 if (spec.OrderBy != null)
                     q = q.OrderBy(spec.OrderBy);
@@ -35,10 +32,10 @@ namespace Infrastructure.Data
         }
 
         public static IQueryable<TEntity> GetQuery(DbContext context,
-            ISpecification<TEntity> spec)
+            ISpecification<TEntity> spec, bool isGetCount = false)
         {
             var q = context.Set<TEntity>().AsQueryable();
-            return GetQuery(q, spec);
+            return GetQuery(q, spec, isGetCount);
         }
 
     }

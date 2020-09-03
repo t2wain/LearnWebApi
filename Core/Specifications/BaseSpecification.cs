@@ -19,7 +19,6 @@ namespace Core.Specifications
         }
         public Expression<Func<T, object>> OrderBy { get; set; }
         public Expression<Func<T, object>> OrderByDescending { get; set; }
-        public bool IsCountEnabled { get; set; }
         public bool IsPagingEnabled { get; set; } = true;
         public int Take { get; set; } = 50;
         public int Skip { get; set; }

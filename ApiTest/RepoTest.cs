@@ -1,8 +1,5 @@
 ﻿using Core.Specifications;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace ApiTest
@@ -69,5 +66,18 @@ namespace ApiTest
             var p = await this._df.ProductRepo.GetById(s);
             Assert.Null(p);
         }
+
+        [Fact]
+        public async void Should_Return_ProductDtos_Filter_Category()
+        {
+            var sp = new ProductSpecParams() { Sort = "nameAsc", ProductCategoryId = 25 };
+            var pg = await this._df.Repo.GetProductsDtoAsync(sp);
+            Assert.True(pg.PageSize == sp.PageSize);
+            Assert.True(pg.PageIndex == sp.PageIndex);
+            Assert.True(pg.Count < 295);
+            Assert.False(pg.Data.First().Name.StartsWith("A"));
+            Assert.False(pg.Data.First().Name.StartsWith("W"));
+        }
+
     }
 }

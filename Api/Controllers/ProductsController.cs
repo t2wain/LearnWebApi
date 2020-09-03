@@ -24,11 +24,10 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> Get([FromQuery] ProductSpecParams spec)
+        public async Task<ActionResult<Pagination<ProductDto>>> Get([FromQuery] ProductSpecParams spec)
         {
-            var lst = await this._repo.GetProductsAsync(spec);
-            var lstDto = this._mapper.Map<IEnumerable<ProductDto>>(lst);
-            return Ok(lstDto);
+            var pg = await this._repo.GetProductsDtoAsync(spec);
+            return Ok(pg);
         }
 
         [HttpGet]
