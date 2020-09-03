@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Core.Dtos;
 using System.Collections.Generic;
+using Core.Specifications;
 
 namespace ApiTest
 {
@@ -19,7 +20,8 @@ namespace ApiTest
         [Fact]
         public async void Should_Map_To_Product_DTO()
         {
-            var lst = await this._df.Repo.GetProductsAsync();
+            var s = new ProductSpecParams() { PageSize = 1 };
+            var lst = await this._df.Repo.GetProductsAsync(s);
             var lstDto = this._df.Mapper.Map<IEnumerable<ProductDto>>(lst);
             Assert.NotEmpty(lstDto);
         }

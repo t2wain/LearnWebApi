@@ -6,16 +6,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Core.Specifications;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Infrastructure.Data
 {
     public class Repository : IRepository
     {
         private readonly AdventureWorksContext _context;
+        private readonly IGenericRepository<Product> _prodRepo;
 
         public Repository(AdventureWorksContext context)
         {
             this._context = context;
+            this._prodRepo = new GenericRepository<Product>(this._context);
         }
 
         #region Customer
@@ -36,23 +40,21 @@ namespace Infrastructure.Data
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await this.ProductQtry(id).SingleOrDefaultAsync();
+            var spec = new ProductSpec(id);
+            return await this._prodRepo.GetById(spec);
         }
 
-        public async Task<IReadOnlyList<Product>> GetProductsAsync()
+        public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductSpecParams productParams)
         {
-            return await this.ProductQtry().ToListAsync();
+            var spec = new ProductSpec(productParams);
+            return await this._prodRepo.GetListAsync(spec);
         }
 
-        protected IQueryable<Product> ProductQtry(int? id = null)
+        public async Task<int> GetProductsCountAsync(ProductSpecParams productParams)
         {
-            var q = this._context.Product
-                .Include(p => p.ProductCategory)
-                .Include(p => p.ProductModel)
-                .AsQueryable();
-            if (id.HasValue)
-                q = q.Where(p => p.ProductId == id.Value);
-            return q;
+            var spec = new ProductSpec(productParams);
+            spec.IsCountEnabled = true;
+            return await this._prodRepo.GetCountAsync(spec);
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Dtos;
 using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,9 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> Get()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> Get([FromQuery] ProductSpecParams spec)
         {
-            var lst = await this._repo.GetProductsAsync();
+            var lst = await this._repo.GetProductsAsync(spec);
             var lstDto = this._mapper.Map<IEnumerable<ProductDto>>(lst);
             return Ok(lstDto);
         }

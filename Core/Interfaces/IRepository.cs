@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Core.Interfaces
     {
         Task<IReadOnlyList<Customer>> GetCustomersAsync();
         Task<Customer> GetCustomerByIdAsync(int id);
-        Task<IReadOnlyList<Product>> GetProductsAsync();
+        Task<IReadOnlyList<Product>> GetProductsAsync(ProductSpecParams productParams);
         Task<Product> GetProductByIdAsync(int id);
     }
 }
